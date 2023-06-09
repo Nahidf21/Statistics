@@ -1,0 +1,63 @@
+---
+title: "Homework_1_problem_2"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+## a. Consider the following two variables: FacTeaching and COL. These data describe the score the students gave their instructors’ teaching ability and the college in which the students were enrolled. Use the table function to construct a contingency table of these two variables.
+
+```{r}
+track <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/pgs.csv")
+table_con= table(track[,c("FacTeaching", "COL")])
+table_con
+```
+
+## b. Use prop.table with your table from part (a) as input to construct another contingency table showing the same information as proportions (i.e., so that all values sum to 1).
+
+```{r}
+prop_table= prop.table(table_con)
+prop_table
+
+```
+
+## c. Using your solution from part (b), find the probability that a student is from the College of Education (ED) and rated their instructors at a value of 4.
+
+```{r}
+probability_ED_4= prop_table[4,"ED"]
+probability_ED_4
+```
+
+## d. Using your solution from part (b), find the probability that a randomly-selected student is from the College of Business Administration (BA).
+```{r}
+prob_BA <- sum(prop_table[, "BA"])
+prob_BA
+```
+
+## e. Using your solution from part (b), find the probability that a randomly selected student rated their instructors at a value of 2?
+
+```{r}
+
+prob_random_s_2 <- sum(prop_table[2,])
+prob_random_s_2
+
+```
+
+## f. Using your solution from part (b), find the conditional probability that, given the fact that a student is from the College of Arts and Sciences (AS), the student rated their instructors at a value of 3?
+
+```{r}
+cond_prob_AS_3 <- prop_table["3", "AS"] / sum(prop_table[, "AS"])
+cond_prob_AS_3 
+```
+## g. Using your solution from part (b), find the conditional probability that, given the fact that instructors were rated at a value of 5, the student was from the College of Visual and Performing Arts (VPA)?
+```{r}
+cond_prob_VPA_5 <- prop_table["5", "VPA"] / sum(prop_table["5", ])
+cond_prob_VPA_5
+```
+
+## h. Using the data above, assess the quality of teaching between the College of Business Administration (BA) and the College of Education (ED).
+``` {r}
+mean_BA <- mean(track$FacTeaching[track$COL == "BA"])
+mean_ED <- mean(track$FacTeaching[track$COL == "ED"])
+print(paste("The mean_BA :  ",mean_BA))
+print(paste("The mean_ED :  ",mean_ED))
+```

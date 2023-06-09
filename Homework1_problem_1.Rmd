@@ -1,0 +1,56 @@
+---
+title: "Homework 01- Problem 1"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+## a. For the 100-meter dash and 200-meter dash, compute the following summary statistics: mean, median, variance, standard deviation.
+```{r }
+track <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/menstrack.csv")
+data_100m <- track[,1]
+data_200m <- track[,2]
+
+print("The summary statistics of 100m data: ")
+print(paste("Mean : ", mean(data_100m )))
+print(paste("Median : ", median(data_100m )))
+print(paste("Variance : ", var(data_100m )))
+print(paste("Standard deviation : ", sd(data_100m )))
+
+print("The summary statistics of 200m data: ")
+print(paste("Mean : ", mean(data_200m )))
+print(paste("Median : ", median(data_200m )))
+print(paste("Variance : ", var(data_200m )))
+print(paste("Standard deviation : ", sd(data_200m )))
+
+```
+
+## b. Does does the use of the mode on the above data provide significant analytical value? Why or why not?
+## Answer: No, mode is not perfect for continus data 
+
+## c. Calculate the z-score for each of the observations in each of the two variables above. Which observations are the most extreme? Should we consider these values outliers?
+```{r}
+track <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/menstrack.csv")
+z_scores <- scale(track[, c("m100", "m200")])
+most_extreme <- track[which(abs(z_scores) == max(abs(z_scores)), arr.ind = TRUE), c("m100", "m200")]
+most_extreme
+```
+## I think i dont need to consider these values as a outliers. 
+
+## d. Create a dataset consisting of only the two variables above. Use cbind to incorporate a new variable corresponding to the 3000-meter run. Now with three variables, use the cor function to create a correlation matrix, which displays the correlations between each pairing of the three variables simultaneously. Comment on the relationships between the three events. Are they what you would expect?
+
+```{r}
+
+track <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/menstrack.csv")
+sub_data <- track[,c("m100","m200")]
+new_data= cbind(sub_data,track$m3000)
+
+cor_matrix= cor(new_data)
+cor_matrix
+
+```
+
+## The correlation matrix indicates a strong correlation between the 100-meter dash and 200-meter dash variables, suggesting that performance in the 100-meter event is generally associated with performance in the 200-meter event. This implies that athletes who excel in the 100-meter dash are likely to perform well in the 200-meter dash as well.
+
+## However, the correlation between the 100-meter/200-meter events and the 3000-meter run is not strong. This suggests that the skills and abilities required for success in the 3000-meter run are different from those needed for the shorter sprints. Athletes who excel in the 100-meter and 200-meter events may not necessarily perform well in the 3000-meter run, indicating a distinction between the two groups of athletes.
+
+## In summary, the correlation matrix suggests a strong relationship between the 100-meter and 200-meter events, indicating similar performance levels. However, the lack of a strong correlation with the 3000-meter run suggests that athletes specializing in longer distances have different characteristics and abilities compared to those in the shorter sprints. 
