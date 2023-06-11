@@ -1,0 +1,64 @@
+---
+title: "R Practice"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r }
+x <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/measure.csv") 
+head(x)
+```
+
+## Input all data.
+
+## Leats standarized the data
+
+```{r}
+scale(x[,1:3])
+```
+
+## Here scale() is a cool function, this function bassically convert the variables value
+## to z score.
+
+## Marginal and Conditional Distributions 
+## Functions for marginal and conditional distributions: "MASS"
+
+```{r}
+library(MASS)
+head(Cars93)
+
+```
+
+```{r}
+xt<- table(Cars93$Type,Cars93$Origin)
+xt
+colSums(xt)
+rowSums(xt)
+
+
+```
+
+## first lets constant collum variables so marzin=01 
+## second lets consider the row in constant 
+## here : CR = 1,2 (1= collums, 2= rows)
+
+```{r}
+prop.table(xt,margin=1)
+prop.table(xt,margin=2)
+```
+## For Cramer's v we need to install a new package , the name of the package is "Recompanion" 
+```{r}
+library(rcompanion)
+v <- cramerV(xt)
+v
+```
+
+## Again Covariance and Correletions 
+
+```{r}
+print("Covariance : ")
+cov(x[,1:3])
+print("Correletions: ")
+cor(x[,1:3])
+```
