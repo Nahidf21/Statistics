@@ -1,0 +1,56 @@
+---
+title: "Untitled"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r}
+panel <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/panel.csv")
+panel[,1]
+mean(panel[,1])
+median(panel[,1])
+sd(panel[,1])
+```
+```{r}
+qqnorm(panel[,1])
+qqline(panel[,1])
+```
+## Most of the data fall in accordance with the theoretical quantiles. We can now look at the skewness and kurtosis.
+
+```{r}
+x<- panel[,1]
+z<- (x-mean(x)/sd(x))
+k3= sum(z^3)/length(z)
+k3
+
+k4= sum(z^4)/length(z)-3
+k4
+```
+
+## Both the skewness and kurtosis are within acceptable limits, so we must conclude that the data that we have is sufficiently close to normal.
+
+# Rankings of Universities
+## Consider the data on academic reputation scores for the top 50 research universities.
+
+```{r}
+topuniv <- read.csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/topuniv.csv")
+x <- topuniv[,4]
+qqnorm(x)
+qqline(x)
+
+```
+
+## The data do not adhere well to the linear relationship between quantiles.
+
+
+```{r}
+z <- (x - mean(x))/sd(x)
+K3 = sum(z^3)/length(z)
+K3
+## [1] 0.1411848
+K4 = sum(z^4)/length(z) - 3
+K4
+## [1] -1.183137
+```
+## The skewness and kurtosis values are reasonable, which indicates the data might be normal. I would argue that this data requires additional inspection before modeling using the normal distribution.
