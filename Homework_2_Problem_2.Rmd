@@ -1,0 +1,75 @@
+---
+title: "Homework_2_Problem_2"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+## a. What is the expected value and standard deviation of the number of patrons in your restaurant on a given day? Hint: Assume that 𝑋 is a Poisson-distributed random variable. What is 𝜆?
+## The expected value (mean) of the Poisson distribution is given by 𝐸(𝑋) = 𝜆, and the standard deviation is given by 𝜎(𝑋) = sqrt(𝜆).
+
+## Given that you see around 600 patrons on an average day, 𝜆 would be equal to 600.
+
+## Therefore, the expected value of the number of patrons is 𝐸(𝑋) = 600, and the standard deviation is 𝜎(𝑋) = sqrt(600).
+```{r}
+𝜆= 600
+Expacted_value= 𝜆
+Expacted_value
+standard_deviation = sqrt(𝜆)
+standard_deviation
+
+```
+## b. Find the possibility of all possible values of 𝑋 graphically and the collective probability of each grouping of one hundred patrons (e.g. 𝑃(0 ≤ 𝑋 < 100), 𝑃(100 ≤ 𝑋 < 200) etc.) numerically. 
+```{r}
+x <- 0:1200
+lambda <- 600
+probabilities <- dpois(x, lambda)
+
+plot(x, probabilities, type = "h",
+     main = "Probability Distribution of X",
+     xlab = "Number of Patrons (X)",
+     ylab = "Probability",
+     col = "blue"
+)
+
+```
+## To calculate the collective probability of each grouping of one hundred patrons (e.g., 𝑃(0 ≤ 𝑋 < 100), 𝑃(100 ≤ 𝑋 < 200), etc.) numerically, we can use the ppois() function in R. The code snippet below calculates the probabilities for the specified groupings:
+```{r}
+groupings <- seq(0, 1200, 100)
+group_probabilities <- diff(ppois(groupings, lambda))
+
+# Display the probabilities for the groupings
+for (i in 1:length(groupings)) {
+  cat(paste0("P(", groupings[i], " ≤ X <", groupings[i] + 100, ") = ", group_probabilities[i], "\n"))
+}
+
+
+```
+## c. Your cooks are getting cranky and have told you that they will quit if there are more than 675 patrons ever. What is the probability of such an event? 
+```{r}
+probability_more_than_675 <- 1 - ppois(675, lambda)
+probability_more_than_675
+```
+## The probability_more_than_675 variable will contain the probability of having more than 675 patrons in your restaurant on a given day. 
+
+## d. Simulate your restaurant workload for the next year (take a look at the function rpois()). Compare your results against those from part b. 
+```{r}
+num_days <- 365
+simulated_workload <- rpois(num_days, lambda)
+
+hist(simulated_workload, breaks = 20, 
+     main = "Simulated Workload Distribution",
+     xlab = "Number of Patrons",
+     ylab = "Probability",
+     col = "blue",
+     border = "white",
+     probability = TRUE
+)
+
+# Calculate the probabilities
+normalized_freq <- hist(simulated_workload, plot = FALSE)$counts / num_days
+normalized_freq
+
+# Display the probabilities above each bar
+mtext(text = round(normalized_freq, 4), side = 3, at = pretty(simulated_workload), line = -2, cex = 0.7)
+
+```
