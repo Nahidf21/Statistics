@@ -1,0 +1,43 @@
+---
+title: "Homework 3_03"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r}
+library(tidyverse)
+
+# Read in the data
+pgs <- read_csv("https://raw.githubusercontent.com/EricBrownTTU/ISQS5346/main/pgs.csv")
+
+# Create a contingency table of the two variables
+contingency_table <- pgs %>%
+  select(FacTeaching, COL) %>%
+  table()
+
+# Perform the chi-square test of independence
+chi2 <- chisq.test(contingency_table)
+
+# Print the results
+print(chi2)
+
+# Remove the column with the fewest data points
+fewest_data_points <- which.min(contingency_table[, 1])
+pgs <- pgs[, -fewest_data_points]
+
+# Re-create the contingency table and perform the chi-square test of independence
+contingency_table <- pgs %>%
+  select(FacTeaching, COL) %>%
+  table()
+
+chi2 <- chisq.test(contingency_table)
+
+# Print the results
+print(chi2)
+```
+
+## The output of the code is the same for both the original data set and the data set after we remove the column with the fewest data points. This is because the chi-squared test of independence is not very sensitive to outliers. In other words, even if there are a few outliers in the data, the chi-squared test may still not be able to detect a statistically significant association between the two variables.
+
+## There are a few reasons why the chi-squared test may not be very sensitive to outliers. First, the chi-squared test is based on the assumption that the data is normally distributed. If the data is not normally distributed, then the chi-squared test may not be accurate. Second, the chi-squared test is based on the assumption that the data is independent. If the data is not independent, then the chi-squared test may not be accurate.
+
