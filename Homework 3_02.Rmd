@@ -1,0 +1,36 @@
+---
+title: "Homework 3_02"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r} 
+urlRemote <- "https://raw.githubusercontent.com/"
+pathGithub <- "EricBrownTTU/ISQS5346/main/"
+filename <- "CollegeDebt.csv"
+debt <- read.csv(paste0(urlRemote, pathGithub, filename))
+
+```
+## a. The most appropriate statistical test for comparing the average debt at graduation incurred by students at private universities and public colleges is the two-sample t-test (also known as the independent t-test). This test is used when we want to compare the means of two independent groups to determine if they are significantly different from each other.
+```{r} 
+
+# Extract debt values for private universities and public colleges
+debt_private_uni <- debt$Average.Debt.at.Graduation....[debt$Option == 'Private']
+debt_public_college <- debt$Average.Debt.at.Graduation....[debt$Option == 'Public'] # replace 'Public' with the correct value in your dataset
+
+# Perform the two-sample t-test
+t_test_results <- t.test(debt_private_uni, debt_public_college)
+
+# Print the results
+print(t_test_results)
+
+```
+## The p-value in my test result is 1.544e-08 (0.00000001544), which is significantly smaller than the significance level α = 0.05. Therefore, we would reject the null hypothesis. This means there's significant evidence to conclude that there is a difference in the average debt at graduation between students from private universities and public colleges.
+
+## The t-statistic (t = 5.9082) is the calculated difference in sample means (in units of standard error). The degrees of freedom (df = 192.46) is an estimate of the number of independent pieces of information that went into calculating the estimate.
+
+## The 95% confidence interval of the difference in means is between 3183.857 and 6374.883. This suggests that, on average, the difference in the debt at graduation between students from private universities and those from public colleges is estimated to be between these two values, with 95% confidence.
+
+## The estimated average debt at graduation is higher for students from private universities (mean of x = 29163.94) than for those from public colleges (mean of y = 24384.57).
+
