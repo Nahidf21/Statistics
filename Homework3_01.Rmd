@@ -1,0 +1,70 @@
+---
+title: "Homework 3_01"
+author: "Nahid Ferdous"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r}
+urlRemote <- "https://raw.githubusercontent.com/" 
+pathGithub <- "EricBrownTTU/ISQS5346/main/" 
+filename <- "InsuranceClaims.csv"
+InsuranceClaims <- read.csv(paste0(urlRemote, pathGithub, filename))
+
+```
+
+## a. Constructing a 95% confidence interval for the population proportion of all auto injury files that have exaggerated loss amounts:
+```{r}
+# Load the required library
+library(stats)
+
+# Calculate the sample proportion
+p_hat <- sum(InsuranceClaims$Buildup) / nrow(InsuranceClaims)
+
+# Calculate the standard error
+se <- sqrt((p_hat * (1 - p_hat)) / nrow(InsuranceClaims))
+
+# Set the confidence level and calculate the critical value
+confidence_level <- 0.95
+z <- qnorm((1 + confidence_level) / 2)
+
+# Calculate the confidence interval
+ci_proportion <- c(p_hat - z * se, p_hat + z * se)
+
+# Print the confidence interval
+print(ci_proportion)
+
+```
+
+## b. Constructing a 95% confidence interval for the population mean excess payment amount:
+
+```{r}
+# Calculate the sample mean and standard deviation
+x_bar <- mean(InsuranceClaims$ExcessPayment)
+s <- sd(InsuranceClaims$ExcessPayment)
+
+# Calculate the standard error
+se_mean <- s / sqrt(nrow(InsuranceClaims))
+
+# Set the confidence level and calculate the critical value
+confidence_level <- 0.95
+t <- qt((1 + confidence_level) / 2, df = nrow(InsuranceClaims) - 1)
+
+# Calculate the confidence interval
+ci_mean <- c(x_bar - t * se_mean, x_bar + t * se_mean)
+
+# Print the confidence interval
+print(ci_mean)
+
+
+```
+
+## Based on the confidence intervals developed in parts (a) and (b), we can assess the insurance company's claims.
+
+## a. Proportion of Buildup:
+## The estimated proportion of buildup provided by the insurance company is 0.75. Comparing this estimate with the   confidence interval [0.4642898, 0.6690435] calculated in part (a), we can see that the estimate falls outside the   confidence interval. This suggests that the estimate of 0.75 for the proportion of buildup may be too high or   exaggerated. There is uncertainty regarding the true proportion based on the available data.
+
+## b. Average Excess Payment:
+## The insurance company estimates the average excess payment to be 400. Comparing this estimate with the confidence  ## interval [136.2848, 502.2120] calculated in part (b), we can see that the estimate of 400 falls within the  confidence interval. This suggests that the estimate is plausible and supported by the available data.
+
+## Based on the confidence intervals, the insurance company's claim regarding the average excess payment of 400 is supported, but their claim regarding the proportion of buildup being 0.75 is not strongly supported and may be overstated.
