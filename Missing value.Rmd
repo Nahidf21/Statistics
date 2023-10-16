@@ -1,0 +1,155 @@
+---
+title: "Missing Values"
+author: "Nahid Ferdous"
+date: "2023-10-15"
+output: html_document
+---
+```{r}
+hypo <- read.csv("https://raw.githubusercontent.com/asheikhz2/TTU_Zadeh/main/hypo.csv")
+head(hypo)
+
+```
+```{r}
+hypo_numerical = hypo[c("age","IQ","weight")]
+hypo_numerical
+```
+```{r}
+# lets findout coreletion matrix
+cor_hypo <- cor(hypo_numerical)
+cor_hypo
+# We get this NA result because we have NA values in the hypo_numerical datasets. 
+```
+## lets clean the dataset then calculate the correletion matrix``
+```{r}
+# lets clean the dataset then calculate the correletion matrix
+# lets apply na.omit method , this method drop all missing values and this is not a good practice 
+hypo_numerical_omit <- na.omit(hypo_numerical)
+hypo_numerical_omit
+# See it delate all rows which are caries missing values.
+# lets see the correletion 
+corr_omit <- cor(hypo_numerical_omit)
+corr_omit
+
+```
+
+```{r}
+# there is a anothe way to keep consider the missing values and calculate correletion. Then we will use cor method with an abbreviation, the abbriviation is complete.obs
+corr_complete_obs <- cor(hypo_numerical, use = "complete.obs")
+corr_complete_obs
+## this both methods are same and we should louse a lot of data.Thats why we ignore this if we have a lots of
+#missing value
+```
+
+```{r}
+## there is another option, the name of this methode is piarwise.complete.obs, this method delact missing value
+## piarwise 
+hypo_piarwise_cor <-  cor(hypo_numerical, use = "pairwise.complete.obs")
+hypo_piarwise_cor
+
+```
+```{r}
+hypo_clean_piarwise = hypo_numerical[complete.cases(hypo_numerical),]
+## hypo_clean_piarwise
+cor_clean_pia <- cor(hypo_clean_piarwise)
+cor_clean_pia
+```
+```{r}
+## maximum likelihood estimates of the covariance matrix , ML Multivaruate normal data with missing values.
+## name of the library is MVMLE 
+library(mvnmle)
+ml_fit <- mlest(hypo_numerical)
+ml_fit$sigmahat
+# the sigmahat provides covariance matrix 
+corr_l <- cov2cor(ml_fit$sigmahat)
+corr_l
+```
+```{r}
+# lets use for loop 
+# median imputetion in the missing value
+data <- hypo_numerical
+for (q in 1:ncol(data)){
+  data[is.na(data[,q]),q] <-median(data[,q],na.rm = TRUE)
+}
+cor_median <- cor(data)
+cor_median
+```
+```{r}
+# find only null values 
+find_missing <- hypo
+for (q in 1: ncol(hypo)){
+  print(hypo[is.na(hypo[,q]),q])
+}
+```
+
+```{r}
+# lets work with random number imputetion 
+set.seed(1234)
+random_imputetion <- function(a){
+  missing_values <- is.na(hypo_numerical)
+  number_missing_values <- sum(missing_values)
+  a_obs <- a[!missing_values]
+  imputed <- a 
+  imputed[missing_values] <- sample(a_obs, number_missing_values, replace = TRUE)
+  return (imputed)
+}
+
+rand_missing <- random_imputetion(hypo_numerical)
+cor(rand_missing)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
