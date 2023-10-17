@@ -1,0 +1,72 @@
+```{r}
+x <- c(0,1,1.1,1.5,1.9,2.8,2.9,3.5)
+hist(x)
+
+```
+```{r}
+plot(density(x))
+
+```
+```{r}
+plot(density(x, bw = .5, kernel = "gaussian"))
+
+
+```
+```{r}
+plot(density(x, bw = .5, kernel = "triangular"))
+
+
+```
+```{r}
+plot(density(x, bw = .5, kernel = "rectangular"))
+```
+
+```{r}
+plot(density(x, bw = .5, kernel = "epanechnikov"))
+```
+```{r}
+
+set.seed(1234)
+sample <- rnorm(1000, mean= 0, sd = 1)
+xgrid <- seq(-4, 4, 0.01)
+plot(xgrid, dnorm(xgrid), type = "l")
+points(density(sample, kernel ="gaussian"), type = "l", col = 2)
+
+```
+```{r}
+library("KernSmooth")
+data("CYGOB1", package = "HSAUR2library("KernSmooth")")
+bw <- c(dpik(CYGOB1$logst), dpik(CYGOB1$logli))
+density <- bkde2D(CYGOB1, bandwidth = bw)
+# plot original data
+plot(CYGOB1, xlab = "log surface temperature",
+ylab = "log light intensity",
+main="LOGS of Light Intensities and Surface Temps")
+# add contours for bivariate densities
+contour(x = density$x1, y = density$x2, z = density$fhat, add = TRUE)
+
+
+```
+
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+
+```
+```{r}
+
+
+
+```
+
+
+
+
+

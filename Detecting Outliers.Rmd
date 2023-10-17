@@ -1,0 +1,54 @@
+---
+title: "Detecting Outliers"
+author: "Nahid Ferdous"
+date: "2023-10-16"
+output: html_document
+---
+```{r}
+library(HSAUR2)
+
+data("USairpollution", package = "HSAUR2")
+head(USairpollution)
+```
+```{r}
+plot(USairpollution$popul, USairpollution$manu, xlab = "Population in thousands", ylab = "Menufacturing Enterprices" )
+```
+```{r}
+plot(USairpollution$popul, USairpollution$manu, xlab = "Population in thousands",col = "red", pch = "x", ylab = "Menufacturing Enterprices" )
+
+text(USairpollution$popul, USairpollution$manu, cex = .5, labels = row.names(USairpollution))
+
+```
+```{r}
+boxplot(USairpollution$popul, col = "Green")
+```
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
