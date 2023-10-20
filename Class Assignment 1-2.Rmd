@@ -1,0 +1,147 @@
+---
+title: "Class Assignment 1"
+author: "Nahid Ferdous"
+output: pdf_document
+---
+
+# Problem 1
+
+Use the TTU graduate student exit survey data.
+
+```{r tidy=FALSE}
+grad <- read.csv("https://raw.githubusercontent.com/asheikhz2/TTU_Zadeh/main/pgs.csv")
+```
+
+a)  Create a new data-frame for three variables: "GenRating", "DeptStaff", "Housing".
+
+```{r}
+mydata = grad[, c("GenRating", "DeptStaff", "Housing")]
+
+head(mydata)
+
+```
+
+b)  There are some missing values in this data. Find a correlation matrix for the data of part (a). If there are NAs (missing values) in your data, estimate the correlation matrix by all three following methods: (1) Complete Case Analysis, (2) MLE, (3) Median insertion.
+
+```{r}
+# Complete Case Analysis 
+mydata_na_omit <- na.omit(mydata)
+corr_na_omit <- cor(mydata_na_omit)
+print("Complete Case Analysis")
+corr_na_omit
+
+# Maximum Likelihood Estimation
+library(mvnmle)
+mydata_MLE_fit <- mlest(mydata)
+mydata_MLE_cov <- mydata_MLE_fit$sigmahat
+mydata_MLE_corr <- cov2cor(mydata_MLE_cov)
+cat("\n\n")
+print("Maximum Likelihood Estimation")
+mydata_MLE_corr
+
+# Median insertion
+
+mydata_Median_insertion <- mydata
+
+for (c in 1: ncol(mydata_Median_insertion)){
+  NaN_bool <- is.na(mydata_Median_insertion[,c])
+  NaN_index <- which(NaN_bool)
+  mydata_Median_insertion[NaN_index,c] <- median(mydata_Median_insertion[,c], na.rm = TRUE)
+}
+cat("\n\n")
+print("Median insertion")
+mydata_Median_insertion_corr = cor(mydata_Median_insertion)
+mydata_Median_insertion_corr
+
+
+```
+
+# Problem 2
+
+Read the crime data set.
+
+```{r tidy=FALSE}
+crime <- read.csv("https://raw.githubusercontent.com/asheikhz2/TTU_Zadeh/main/crime.csv", 
+row.names = "STATE")
+head(crime)
+```
+
+a)  Find the correlation matrix of the data.
+
+```{r}
+crime_cor <- cor(crime)
+crime_cor
+```
+
+b)  Create a bi-variate boxplot for "MURDER" vs "AUTO".
+
+```{r}
+library(MVA)
+MURDER_AUTO_data= crime[,c("MURDER", "AUTO")]
+bvbox(MURDER_AUTO_data, xlab = "MURDER", ylab = "AUTO", col = "blue", cex = 0.5)
+text(MURDER_AUTO_data, labels = row.names(crime), cex = 0.7, pos = 2)
+```
+
+c)  Create Chi-sq plot for mahalanobis distances (Lecture 8).
+
+```{r}
+x <- MURDER_AUTO_data
+xbar <- colMeans(x)
+s <- cov(x)
+# mahalanobis distances 
+d2 <- mahalanobis(x,xbar, s)
+number_of_variables <- ncol(x)
+position <- (1:nrow(x) -.5)/nrow(x)
+quantiles <- qchisq(position, df = number_of_variables)
+
+# chi_sq plot
+plot(quantiles, sort(d2),
+     xlab = expression(paste(chi[2]^2, "Quantile" )),
+     ylab = "Ordered squared distances")
+abline(a= 0, b =1)
+
+text(quantiles, sort(d2), labels = names(sort(d2)), col = "red", pos = 2)
+```
+
+d)  Given what you see in part b and c, identify outliers. Remove those outliers, then find the correlation matrix. Compare the correlation matrices before and after removing outliers.
+
+```{r}
+# In Part B, we identified two outliers: 'RHODE ISLAND' and 'MASSACHUSETTS'. However, in Part C, only 'MASSACHUSETTS' was clearly an outlier, while 'RHODE ISLAND' wasn't definitively so.
+
+print("Original correlation matrix")
+crime_cor
+
+cat("\n\n")
+# first consider "RHODE ISLAND" and "MASSACHUSETTS" our outliers
+two_outliers <- c("RHODE ISLAND", "MASSACHUSETTS")
+two_outliers_indexs <- match(two_outliers, row.names(crime))
+two_outliers_clean <- crime[-two_outliers_indexs,]
+two_outliers_clean_corr <- cor(two_outliers_clean)
+print("Two Outliers removed - RHODE ISLAND and  MASSACHUSETTS (correlation matrix)")
+two_outliers_clean_corr
+
+cat("\n\n")
+# consider "MASSACHUSETTS" our outlier
+one_outliers <- c("MASSACHUSETTS")
+one_outliers_indexs <- match(one_outliers, row.names(crime))
+one_outliers_clean <- crime[-one_outliers_indexs,]
+one_outliers_clean_corr <- cor(one_outliers_clean)
+print("One Outlier removed - MASSACHUSETTS (correlation matrix)")
+one_outliers_clean_corr
+
+cat("\n\n")
+# Lets calculate Mean squared error
+print("Original vs two outliers clean data ")
+MSE_two_outliers_clean <- mean((two_outliers_clean_corr-crime_cor)^2)
+print("MSE- Original vs Two_outliers_clean data")
+MSE_two_outliers_clean
+
+cat("\n\n")
+print("Original vs one outlier clean data ")
+MSE_one_outliers_clean <- mean((one_outliers_clean_corr-crime_cor)^2)
+print("MSE- Original vs One_outliers_clean data")
+MSE_one_outliers_clean
+
+```
+
+# Removing only 'MASSACHUSETTS' as an outlier results in a significantly lower MSE, indicating a better fit for the data compared to the model that also excludes 'RHODE ISLAND.' Therefore, 'RHODE ISLAND' may not be a true statistical outlier.
